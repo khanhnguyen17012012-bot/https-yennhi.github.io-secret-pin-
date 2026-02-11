@@ -3,85 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secret Love</title>
+<title>LOVE YOUU</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
-body{overflow:hidden}
+body{overflow:hidden;background:black;color:white}
 
-/* Gradient */
-@keyframes gradientMove{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
-}
-
-.page{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-background:linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a18cd1,#84fab0);
-background-size:400% 400%;
-animation:gradientMove 12s ease infinite;
-color:white;
-text-align:center;
-padding:20px;
-transition:1s;
-}
-
-.glass{
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(15px);
-padding:40px;
-border-radius:20px;
-box-shadow:0 0 40px rgba(0,0,0,0.2);
-}
-
-input{
-padding:12px;
-border:none;
-border-radius:20px;
-text-align:center;
-margin-top:15px;
-font-size:16px;
-}
-
-button{
-margin-top:15px;
-padding:12px 25px;
-border:none;
-border-radius:30px;
-background:linear-gradient(45deg,#ff416c,#ff4b2b);
-color:white;
-cursor:pointer;
-transition:.3s;
-}
-button:hover{transform:scale(1.1)}
-
-#secret{display:none}
-
-/* Heart */
-#heart{
-font-size:90px;
-position:absolute;
-cursor:pointer;
-user-select:none;
-transition:transform .2s, filter .2s;
-}
-#heart:active{
-transform:scale(1.3);
-filter:drop-shadow(0 0 20px red);
-}
-
-.typing{
-font-size:20px;
-margin-top:120px;
-min-height:30px;
-}
-
-/* Stars */
+/* Nền vũ trụ */
 .star{
 position:fixed;
 width:2px;
@@ -92,6 +20,75 @@ animation:twinkle 2s infinite alternate;
 @keyframes twinkle{
 0%{opacity:.2}
 100%{opacity:1}
+}
+
+/* Trang */
+.page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:radial-gradient(circle at center,#111 0%,#000 100%);
+text-align:center;
+}
+
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+padding:40px;
+border-radius:25px;
+box-shadow:0 0 40px rgba(255,0,150,0.4);
+}
+
+/* Input */
+input{
+padding:12px;
+border:none;
+border-radius:20px;
+text-align:center;
+margin-top:15px;
+font-size:16px;
+}
+
+/* Button */
+button{
+margin-top:15px;
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:linear-gradient(45deg,#ff00cc,#3333ff);
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+button:hover{transform:scale(1.1)}
+
+/* LOVE YOUU */
+.love{
+font-size:70px;
+animation:loveBeat 1.2s infinite;
+text-shadow:0 0 10px #ff00cc,0 0 20px #ff00cc,0 0 40px #ff1493;
+}
+
+@keyframes loveBeat{
+0%{transform:scale(1);color:#ff1493}
+25%{color:#ff00ff}
+50%{transform:scale(1.2);color:#00ffff}
+75%{color:#ff9900}
+100%{transform:scale(1);color:#ff1493}
+}
+
+/* Tim bay */
+.floating{
+position:fixed;
+bottom:-20px;
+animation:float 6s linear infinite;
+font-size:20px;
+}
+@keyframes float{
+0%{transform:translateY(0)}
+100%{transform:translateY(-110vh)}
 }
 
 /* Firework */
@@ -115,17 +112,12 @@ animation:explode 1s ease-out forwards;
 <h1>🔐 Nhập Mã Bí Mật</h1>
 <input type="password" id="pin" placeholder="Nhập PIN">
 <br>
-<button onclick="check()">Xác nhận</button>
+<button onclick="check()">Mở khóa</button>
 </div>
 </div>
 
-<div class="page" id="secret">
-<div class="glass">
-<h1>✨ Thành Công ✨</h1>
-</div>
-
-<div id="heart">❤️</div>
-<div class="typing" id="text"></div>
+<div class="page" id="secret" style="display:none;">
+<h1 class="love">LOVE YOUU 💖</h1>
 </div>
 
 <audio id="music" loop autoplay>
@@ -143,31 +135,16 @@ document.getElementById("main").style.display="none";
 document.getElementById("secret").style.display="flex";
 document.getElementById("music").play();
 startStars();
-typeText();
+startHearts();
+startFireworks();
 }else{
 alert("Sai rồi 😢");
 }
 }
 
-/* Typing */
-function typeText(){
-let message="CHÚC NHI 14-2 LUN VUI VẺ, MẠNH KHỎE, NHỚ HOG ĐC BỎ BỮA VỚI THỨC KHUYA NỮA NHAA!!^^";
-let i=0;
-let box=document.getElementById("text");
-box.innerHTML="";
-function typing(){
-if(i<message.length){
-box.innerHTML+=message.charAt(i);
-i++;
-setTimeout(typing,40);
-}
-}
-typing();
-}
-
-/* Stars */
+/* Sao */
 function startStars(){
-for(let i=0;i<120;i++){
+for(let i=0;i<150;i++){
 let s=document.createElement("div");
 s.className="star";
 s.style.top=Math.random()*100+"vh";
@@ -176,38 +153,32 @@ document.body.appendChild(s);
 }
 }
 
-/* Drag heart */
-const heart=document.getElementById("heart");
-let isDragging=false;
-
-heart.addEventListener("pointerdown",()=>{
-isDragging=true;
-});
-
-document.addEventListener("pointermove",(e)=>{
-if(!isDragging) return;
-heart.style.left=e.clientX-45+"px";
-heart.style.top=e.clientY-45+"px";
-});
-
-document.addEventListener("pointerup",(e)=>{
-if(isDragging){
-createFirework(e.clientX,e.clientY);
+/* Tim bay */
+function startHearts(){
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="floating";
+h.innerHTML="💖";
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=(15+Math.random()*25)+"px";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
+},400);
 }
-isDragging=false;
-});
 
-/* Fireworks */
-function createFirework(x,y){
-for(let i=0;i<25;i++){
+/* Pháo hoa nền */
+function startFireworks(){
+setInterval(()=>{
+for(let i=0;i<20;i++){
 let f=document.createElement("div");
 f.className="firework";
 f.style.background="hsl("+Math.random()*360+",100%,50%)";
-f.style.left=x+"px";
-f.style.top=y+"px";
+f.style.top=Math.random()*80+"vh";
+f.style.left=Math.random()*100+"vw";
 document.body.appendChild(f);
 setTimeout(()=>f.remove(),1000);
 }
+},2000);
 }
 </script>
 
