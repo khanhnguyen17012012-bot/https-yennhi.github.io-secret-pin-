@@ -9,7 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
 body{overflow:hidden}
 
-/* Gradient động */
+/* Gradient */
 @keyframes gradientMove{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
@@ -28,9 +28,9 @@ animation:gradientMove 12s ease infinite;
 color:white;
 text-align:center;
 padding:20px;
+transition:1s;
 }
 
-/* Glass effect */
 .glass{
 background:rgba(255,255,255,0.15);
 backdrop-filter:blur(15px);
@@ -39,7 +39,6 @@ border-radius:20px;
 box-shadow:0 0 40px rgba(0,0,0,0.2);
 }
 
-/* Input */
 input{
 padding:12px;
 border:none;
@@ -49,7 +48,6 @@ margin-top:15px;
 font-size:16px;
 }
 
-/* Button */
 button{
 margin-top:15px;
 padding:12px 25px;
@@ -62,29 +60,25 @@ transition:.3s;
 }
 button:hover{transform:scale(1.1)}
 
-/* Secret */
 #secret{display:none}
 
-/* Heart beat */
-.heart{
-font-size:80px;
-animation:beat 1s infinite;
+/* Heart */
+#heart{
+font-size:90px;
+position:absolute;
+cursor:pointer;
+user-select:none;
+transition:transform .2s, filter .2s;
 }
-@keyframes beat{
-0%{transform:scale(1)}
-50%{transform:scale(1.3)}
-100%{transform:scale(1)}
+#heart:active{
+transform:scale(1.3);
+filter:drop-shadow(0 0 20px red);
 }
 
-/* Floating hearts */
-.floating{
-position:fixed;
-bottom:-20px;
-animation:float 6s linear infinite;
-}
-@keyframes float{
-0%{transform:translateY(0)}
-100%{transform:translateY(-110vh)}
+.typing{
+font-size:20px;
+margin-top:120px;
+min-height:30px;
 }
 
 /* Stars */
@@ -110,13 +104,7 @@ animation:explode 1s ease-out forwards;
 }
 @keyframes explode{
 0%{transform:scale(1);opacity:1}
-100%{transform:scale(5);opacity:0}
-}
-
-.typing{
-font-size:20px;
-margin-top:20px;
-min-height:30px;
+100%{transform:scale(6);opacity:0}
 }
 </style>
 </head>
@@ -134,14 +122,14 @@ min-height:30px;
 <div class="page" id="secret">
 <div class="glass">
 <h1>✨ Thành Công ✨</h1>
-<div class="heart">❤️</div>
-<div class="typing" id="text"></div>
-<button onclick="playMusic()">Bật Nhạc 🎵</button>
-</div>
 </div>
 
-<audio id="music" loop>
-<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+<div id="heart">❤️</div>
+<div class="typing" id="text"></div>
+</div>
+
+<audio id="music" loop autoplay>
+<source src="Download.mp4" type="audio/mp4">
 </audio>
 
 <script>
@@ -153,47 +141,33 @@ let val=document.getElementById("pin").value;
 if(val===correct){
 document.getElementById("main").style.display="none";
 document.getElementById("secret").style.display="flex";
-startHearts();
+document.getElementById("music").play();
 startStars();
-fireworks();
 typeText();
 }else{
 alert("Sai rồi 😢");
 }
 }
 
-/* Typing effect */
+/* Typing */
 function typeText(){
-let message="Cảm ơn bạn đã xuất hiện trong cuộc đời mình 💖";
+let message="CHÚC NHI 14-2 LUN VUI VẺ, MẠNH KHỎE, NHỚ HOG ĐC BỎ BỮA VỚI THỨC KHUYA NỮA NHAA!!^^";
 let i=0;
-let speed=50;
 let box=document.getElementById("text");
+box.innerHTML="";
 function typing(){
 if(i<message.length){
 box.innerHTML+=message.charAt(i);
 i++;
-setTimeout(typing,speed);
+setTimeout(typing,40);
 }
 }
 typing();
 }
 
-/* Floating hearts */
-function startHearts(){
-setInterval(()=>{
-let h=document.createElement("div");
-h.className="floating";
-h.innerHTML="❤️";
-h.style.left=Math.random()*100+"vw";
-h.style.fontSize=(20+Math.random()*30)+"px";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),6000);
-},400);
-}
-
-/* Stars background */
+/* Stars */
 function startStars(){
-for(let i=0;i<100;i++){
+for(let i=0;i<120;i++){
 let s=document.createElement("div");
 s.className="star";
 s.style.top=Math.random()*100+"vh";
@@ -202,23 +176,38 @@ document.body.appendChild(s);
 }
 }
 
+/* Drag heart */
+const heart=document.getElementById("heart");
+let isDragging=false;
+
+heart.addEventListener("pointerdown",()=>{
+isDragging=true;
+});
+
+document.addEventListener("pointermove",(e)=>{
+if(!isDragging) return;
+heart.style.left=e.clientX-45+"px";
+heart.style.top=e.clientY-45+"px";
+});
+
+document.addEventListener("pointerup",(e)=>{
+if(isDragging){
+createFirework(e.clientX,e.clientY);
+}
+isDragging=false;
+});
+
 /* Fireworks */
-function fireworks(){
-setInterval(()=>{
-for(let i=0;i<20;i++){
+function createFirework(x,y){
+for(let i=0;i<25;i++){
 let f=document.createElement("div");
 f.className="firework";
 f.style.background="hsl("+Math.random()*360+",100%,50%)";
-f.style.top=Math.random()*80+"vh";
-f.style.left=Math.random()*100+"vw";
+f.style.left=x+"px";
+f.style.top=y+"px";
 document.body.appendChild(f);
 setTimeout(()=>f.remove(),1000);
 }
-},800);
-}
-
-function playMusic(){
-document.getElementById("music").play();
 }
 </script>
 
