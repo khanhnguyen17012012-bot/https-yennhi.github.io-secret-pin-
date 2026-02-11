@@ -3,23 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOVE YOUU</title>
+<title>LOVE YOUU - FINAL BOSS</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
-body{overflow:hidden;background:black;color:white}
-
-/* Nền vũ trụ */
-.star{
-position:fixed;
-width:2px;
-height:2px;
-background:white;
-animation:twinkle 2s infinite alternate;
+body{
+overflow:hidden;
+background:black;
+color:white;
 }
-@keyframes twinkle{
-0%{opacity:.2}
-100%{opacity:1}
+
+/* Flash */
+.flash{
+position:fixed;
+width:100%;
+height:100%;
+background:white;
+opacity:0;
+pointer-events:none;
+z-index:999;
 }
 
 /* Trang */
@@ -29,114 +31,116 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-background:radial-gradient(circle at center,#111 0%,#000 100%);
+background:radial-gradient(circle at center,#0f0f1f,#000);
+transition:1s;
 text-align:center;
 }
-
-.glass{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-padding:40px;
-border-radius:25px;
-box-shadow:0 0 40px rgba(255,0,150,0.4);
-}
-
-/* Input */
-input{
-padding:12px;
-border:none;
-border-radius:20px;
-text-align:center;
-margin-top:15px;
-font-size:16px;
-}
-
-/* Button */
-button{
-margin-top:15px;
-padding:12px 25px;
-border:none;
-border-radius:30px;
-background:linear-gradient(45deg,#ff00cc,#3333ff);
-color:white;
-cursor:pointer;
-transition:.3s;
-}
-button:hover{transform:scale(1.1)}
 
 /* LOVE YOUU */
 .love{
-font-size:70px;
-animation:loveBeat 1.2s infinite;
-text-shadow:0 0 10px #ff00cc,0 0 20px #ff00cc,0 0 40px #ff1493;
+font-size:90px;
+opacity:0;
+transform:scale(.5);
+animation:appear 2s forwards;
+text-shadow:0 0 20px #ff00cc,0 0 40px #ff1493,0 0 80px #ff69b4;
 }
 
-@keyframes loveBeat{
-0%{transform:scale(1);color:#ff1493}
-25%{color:#ff00ff}
-50%{transform:scale(1.2);color:#00ffff}
-75%{color:#ff9900}
-100%{transform:scale(1);color:#ff1493}
+@keyframes appear{
+0%{opacity:0;transform:scale(.3)}
+50%{opacity:1;transform:scale(1.4)}
+100%{opacity:1;transform:scale(1)}
+}
+
+/* Rung nhẹ */
+@keyframes shake{
+0%{transform:translateX(0)}
+25%{transform:translateX(-2px)}
+50%{transform:translateX(2px)}
+75%{transform:translateX(-2px)}
+100%{transform:translateX(0)}
+}
+
+/* Sao nền */
+.star{
+position:fixed;
+width:2px;height:2px;
+background:white;
+animation:twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+0%{opacity:.2}
+100%{opacity:1}
 }
 
 /* Tim bay */
-.floating{
+.heart{
 position:fixed;
 bottom:-20px;
-animation:float 6s linear infinite;
-font-size:20px;
+animation:float 6s linear forwards;
 }
 @keyframes float{
 0%{transform:translateY(0)}
 100%{transform:translateY(-110vh)}
 }
 
-/* Firework */
-.firework{
+/* Pháo hoa tim */
+.boom{
 position:fixed;
-width:6px;
-height:6px;
-border-radius:50%;
-animation:explode 1s ease-out forwards;
+font-size:20px;
+animation:explode 1.2s forwards;
 }
 @keyframes explode{
-0%{transform:scale(1);opacity:1}
-100%{transform:scale(6);opacity:0}
+0%{transform:scale(0);opacity:1}
+100%{transform:scale(4);opacity:0}
 }
 </style>
 </head>
 <body>
 
+<div class="flash" id="flash"></div>
+
 <div class="page" id="main">
-<div class="glass">
 <h1>🔐 Nhập Mã Bí Mật</h1>
-<input type="password" id="pin" placeholder="Nhập PIN">
-<br>
+<input type="password" id="pin">
+<br><br>
 <button onclick="check()">Mở khóa</button>
-</div>
 </div>
 
 <div class="page" id="secret" style="display:none;">
-<h1 class="love">LOVE YOUU 💖</h1>
+<h1 class="love" id="loveText">LOVE YOUU 💖</h1>
 </div>
 
-<audio id="music" loop autoplay>
-<source src="Download.mp4" type="audio/mp4">
+<audio id="music" loop>
+<source src="Download.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="whoosh">
+<source src="https://assets.mixkit.co/sfx/preview/mixkit-fast-woosh-transition-1486.mp3">
 </audio>
 
 <script>
 const correct="22032012";
 
-/* Check PIN */
 function check(){
 let val=document.getElementById("pin").value;
 if(val===correct){
+
+let flash=document.getElementById("flash");
+flash.style.opacity="1";
+setTimeout(()=>flash.style.opacity="0",300);
+
+document.getElementById("whoosh").play();
+
+setTimeout(()=>{
 document.getElementById("main").style.display="none";
 document.getElementById("secret").style.display="flex";
 document.getElementById("music").play();
 startStars();
 startHearts();
-startFireworks();
+fireworks();
+shakeText();
+},400);
+
 }else{
 alert("Sai rồi 😢");
 }
@@ -157,28 +161,37 @@ document.body.appendChild(s);
 function startHearts(){
 setInterval(()=>{
 let h=document.createElement("div");
-h.className="floating";
+h.className="heart";
 h.innerHTML="💖";
 h.style.left=Math.random()*100+"vw";
 h.style.fontSize=(15+Math.random()*25)+"px";
 document.body.appendChild(h);
 setTimeout(()=>h.remove(),6000);
-},400);
+},300);
 }
 
-/* Pháo hoa nền */
-function startFireworks(){
+/* Pháo hoa */
+function fireworks(){
 setInterval(()=>{
-for(let i=0;i<20;i++){
-let f=document.createElement("div");
-f.className="firework";
-f.style.background="hsl("+Math.random()*360+",100%,50%)";
-f.style.top=Math.random()*80+"vh";
-f.style.left=Math.random()*100+"vw";
-document.body.appendChild(f);
-setTimeout(()=>f.remove(),1000);
+for(let i=0;i<10;i++){
+let b=document.createElement("div");
+b.className="boom";
+b.innerHTML="💗";
+b.style.left=Math.random()*100+"vw";
+b.style.top=Math.random()*100+"vh";
+document.body.appendChild(b);
+setTimeout(()=>b.remove(),1200);
 }
 },2000);
+}
+
+/* Rung chữ */
+function shakeText(){
+let text=document.getElementById("loveText");
+setInterval(()=>{
+text.style.animation="shake 0.3s";
+setTimeout(()=>text.style.animation="",300);
+},3000);
 }
 </script>
 
